@@ -1,0 +1,45 @@
+
+
+select userId from receipt;
+
+select userId from receipt;
+
+select brandCode from item;
+#What are the top 5 brands by receipts scanned for most recent month?
+create view q1 (brandCode,item_id,receipt_id) as
+    select item.brandCode, item.id,receipt_item.receipt_id
+    from item left join receipt_item on item.id = receipt_item.item_id;
+
+create view q12 (brandCode,Item_id,receipt_id,createDate) as
+    select q1.brandCode,q1.Item_id,q1.receipt_id,receipt.createDate
+    from q1 left join receipt on q1.receipt_id =receipt.id;
+
+
+select brandCode, count(brandCode) from q12
+group by(brandCode)
+order by (count(brandCode)) desc
+limit 5;
+
+#How does the ranking of the top 5 brands by receipts scanned for the recent month compare to the ranking for the previous month?
+#When considering average spend from receipts with 'rewardsReceiptStatus’ of ‘Accepted’ or ‘Rejected’, which is greater?
+#assume finish is accepted
+
+
+
+select avg(totalSpent) from receipt
+where rewardsReceiptStatus = 'FINISHED';
+
+select avg(totalSpent) from receipt
+where rewardsReceiptStatus = 'REJECTED';
+#FINISHED is greater
+
+
+
+#When considering total number of items purchased from receipts with 'rewardsReceiptStatus’ of ‘Accepted’ or ‘Rejected’, which is greater?
+#assume finish is accepted
+
+create view q3 ( rewardsReceiptStatus, item_id, receipt_id) as
+       select receipt.rewardsReceiptStatus, q12.item_id, q12.receipt_id
+       from q12 left join receipt on receipt.id = q12.receipt_id;
+
+select count(item_id) from q3 where rewardsReceiptStatus = 'FINISHED';
