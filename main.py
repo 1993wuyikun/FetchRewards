@@ -10,15 +10,15 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Table, Column, Integer, String, MetaData, create_engine, inspect, DateTime, Float, Boolean, ForeignKey, exists
 
 
-def print_hi(name):
+def reloadDataToSQL():
     connect('myMongoDb', host='127.0.0.1', port=27017)
 
-    # 初始化数据库连接:
+
     engine = create_engine("mysql+pymysql://root:Yhm95471963#@localhost:3306/test", echo=True)
-    # 创建DBSession类型:
+
     DBSession = sessionmaker(bind=engine)
 
-    # 创建session对象:
+
     session = DBSession()
     metadata = MetaData(engine)
 
@@ -143,7 +143,7 @@ def print_hi(name):
                                  rewardsReceiptStatus=receipt.rewardsReceiptStatus,
                                  totalSpent=receipt.totalSpent,
                                  userId=receipt.userId)
-        # 添加到session:
+
         session.add(new_receipt)
         for rewardsReceiptItem in receipt.rewardsReceiptItemList:
             if rewardsReceiptItem.barcode:
@@ -202,14 +202,14 @@ def print_hi(name):
         session.add(new_brand)
 
 
-    # 提交即保存到数据库:
+
     session.commit()
-    # 关闭session:
+
     session.close()
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    reloadDataToSQL()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
